@@ -18,14 +18,14 @@ public class FollowWaypoints : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        wps = wpManager.GetComponent<wpManager>().waypoints;
-        g = wpManager.GetComponent<wpManager>().graph;
+        wps = wpManager.GetComponent<WPManager>().waypoints;
+        g = wpManager.GetComponent<WPManager>().graph;
         currentNode = wps[0];
 
         Invoke("GoToRuin", 2);
     }
 
-    public void GoToHei()
+    public void GoToHeli()
     {
         g.AStar(currentNode, wps[0]);
         currentWP = 0;
@@ -34,6 +34,12 @@ public class FollowWaypoints : MonoBehaviour
     public void GoToRuin()
     {
         g.AStar(currentNode, wps[1]);
+        currentWP = 0;
+    }
+
+    public void GoToFactory()
+    {
+        g.AStar(currentNode, wps[4]);
         currentWP = 0;
     }
 
