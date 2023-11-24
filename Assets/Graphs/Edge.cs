@@ -5,12 +5,11 @@ using UnityEngine;
 public class Edge
 {
     public Node startNode;
-    public LinkedListNode endNode;
+    public Node endNode;
 
-    public Edge(LinkedListNode from, LinkedListNode to);
+    public Edge(Node from, Node to)
     {
         startNode = from;
         endNode = to;
     }
-
 }

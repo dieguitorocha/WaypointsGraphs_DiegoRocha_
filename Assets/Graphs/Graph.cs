@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Graph 
+public class Graph
 {
     List<Edge> edges = new List<Edge>();
     List<Node> nodes = new List<Node>();
@@ -14,37 +14,37 @@ public class Graph
     {
         Node node = new Node(id);
         nodes.Add(node);
-
     }
+
     public void AddEdge(GameObject fromNode, GameObject toNode)
     {
-        nodes from = FindNode(fromNode);
-        nodes to = FindNode(toNode);
+        Node from = FindNode(fromNode);
+        Node to = FindNode(toNode);
 
-        if(from != null && to != null)
+        if (from != null && to != null)
         {
-            edges e = new Edge(from, to);
+            Edge e = new Edge(from, to);
             edges.Add(e);
-            from.edgesList.Add(e);
+            from.edgeList.Add(e);
         }
     }
-    LinkedListNode FindNode(GameObject id)
+
+    Node FindNode(GameObject id)
     {
-        foreach (LinkedListNode n in nodes)
+        foreach (Node n in nodes)
         {
             if (n.getId() == id)
                 return n;
-
         }
         return null;
     }
 
     public bool AStar(GameObject startId, GameObject endId)
     {
-        nodes start = FindNode(startId);
-        nodes end = FindNode(endId);
+        Node start = FindNode(startId);
+        Node end = FindNode(endId);
 
-        if(start == null || end == null)
+        if (start == null || end == null)
         {
             return false;
         }
@@ -52,17 +52,18 @@ public class Graph
         List<Node> open = new List<Node>();
         List<Node> closed = new List<Node>();
         float tentative_g_score = 0;
+        bool tentative_is_better;
 
         start.g = 0;
         start.h = distance(start, end);
         start.f = start.h;
 
         open.Add(start);
-        while(open.Count > 0)
+        while (open.Count > 0)
         {
             int i = lowestF(open);
-            nodes thisNode = open[i];
-            if (thisNode.getId() == endId)
+            Node thisNode = open[i];
+            if (thisNode.getId() == endId())
             {
                 ReconstructPath(start, end);
                 return true;
@@ -70,7 +71,7 @@ public class Graph
 
             open.RemoveAt(i);
             closed.Add(thisNode);
-            nodes neighbour;
+            Node neighbour;
             foreach (Edge e in thisNode.edgeList)
             {
                 neighbour = e.endNode;
@@ -79,36 +80,37 @@ public class Graph
                     continue;
 
                 tentative_g_score = thisNode.g + distance(thisNode, neighbour);
-                if (open.EndexOf(neighbour) == 1)
+                if(open.IndexOf(neighbour) == -1)
                 {
                     open.Add(neighbour);
                     tentative_is_better = true;
-
                 }
                 else if (tentative_g_score < neighbour.g)
                 {
                     tentative_is_better = true;
                 }
-                elsetentative_is_better = false;
+                else
+                    tentative_is_better = false;
 
-                if(tentative_is_better)
+                if (tentative_is_better)
                 {
-                    neighbour.cameFrom = thisNode;
+                    neighbour.cameFrom = thidNode;
                     neighbour.g = tentative_g_score;
-                    neighbourh = distance(thisNode, end);
+                    neighbour.h = distance(thisNode, end);
                     neighbour.f = neighbour.g + neighbour.h;
                 }
+
             }
         }
         return false;
     }
 
-    public void ReconstructPath(LinkedListNode startId, LinkedListNode endId)
+    public void ReconstructPath(Node startId, Node endId)
     {
         pathList.Clear();
         pathList.Add(endId);
 
-        cvar p = endId.cameFrom;
+        var p = endId.cameFrom;
         while (p != startId && p != null)
         {
             pathList.Insert(0, p);
@@ -117,22 +119,22 @@ public class Graph
         pathList.Insert(0, startId);
     }
 
-    float distance(LinkedListNode a, LinkedListNode b)
+    float distance(Node a, Node b)
     {
-        return (Vector3.AqrMagnitude(a.getId.transform.position - b.getId.transform.position));
+        return (Vector3.SqrMagnitude(a.getId().transform.position - b.getId().transform.position));
     }
 
-    int lowestF(List<LinkedListNode> l)
+    int lowestF(List<Node> l)
     {
-        float lowestf = 0;
+        float lowestf = l[0].f;
         int count = 0;
         int iteratorCount = 0;
 
         lowestf = l[0].f;
 
-        for(int i = 1; i < l.Count; i++)
+        for (int i = 1; i < l.Count; i++)
         {
-            if(l[i].f <= lowestf)
+            if (l[i].f <= lowestf)
             {
                 lowestf = l[i].f;
                 iteratorCount = count;
@@ -142,3 +144,4 @@ public class Graph
         return iteratorCount;
     }
 }
+
