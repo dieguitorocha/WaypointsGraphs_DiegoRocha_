@@ -2,11 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class Node
+{
+    private GameObject id;
+    public List<Edge> edgeList = new List<Edge>();
+
+    public Node(GameObject id)
+    {
+        this.id = id;
+    }
+
+    public GameObject getId()
+    {
+        return id;
+    }
+}
+
+public class Edge
+{
+    public Node startNode;
+    public Node endNode;
+
+    public Edge(Node from, Node to)
+    {
+        startNode = from;
+        endNode = to;
+    }
+}
+
 public class Graph
 {
     List<Edge> edges = new List<Edge>();
     List<Node> nodes = new List<Node>();
-    List<Node> pathList = new List<Node>();
+    public List<Node> pathList = new List<Node>();
 
     public Graph() { }
 
@@ -63,7 +91,7 @@ public class Graph
         {
             int i = lowestF(open);
             Node thisNode = open[i];
-            if (thisNode.getId() == endId())
+            if (thisNode.getId() == endId)
             {
                 ReconstructPath(start, end);
                 return true;
@@ -80,7 +108,7 @@ public class Graph
                     continue;
 
                 tentative_g_score = thisNode.g + distance(thisNode, neighbour);
-                if(open.IndexOf(neighbour) == -1)
+                if (open.IndexOf(neighbour) == -1)
                 {
                     open.Add(neighbour);
                     tentative_is_better = true;
@@ -94,12 +122,11 @@ public class Graph
 
                 if (tentative_is_better)
                 {
-                    neighbour.cameFrom = thidNode;
+                    neighbour.cameFrom = thisNode;
                     neighbour.g = tentative_g_score;
                     neighbour.h = distance(thisNode, end);
                     neighbour.f = neighbour.g + neighbour.h;
                 }
-
             }
         }
         return false;
@@ -144,4 +171,5 @@ public class Graph
         return iteratorCount;
     }
 }
+
 
